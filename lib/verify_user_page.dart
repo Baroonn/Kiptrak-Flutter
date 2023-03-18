@@ -20,12 +20,14 @@ class VerifyUserPage extends StatefulWidget {
 }
 
 class _VerifyUserPageState extends State<VerifyUserPage> {
-
   String? _code;
   bool? _onEditing;
 
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+            backgroundColor: Color(0xFF152d32),
+            title: const Text('Verify User')),
         body: Container(
             height: MediaQuery.of(context).size.height,
             alignment: Alignment.topCenter,
@@ -61,21 +63,44 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 40),
                       backgroundColor: Colors.pinkAccent,
+                      disabledBackgroundColor: Colors.grey,
                     ),
                     onPressed: _code == null
                         ? null
                         : () async {
                             logDev.log("Verifying User...");
                             var response = await KiptrakNetwork.verify_user(
-                                token: _code!, email: widget.user.email);
+                                code: _code!,
+                                email: widget.user.email,
+                                username: widget.user.userName);
+                            logDev.log("After Verifying User Request...");
                             Response loginResponse;
                             if (response.statusCode == 200 &&
-                                jsonDecode(response.body)['valid'] == true) {
+                                jsonDecode(response.body)['validated']) {
                               logDev.log("Username: ${widget.user.userName}");
                               logDev.log("Password: ${widget.user.password}");
                               loginResponse = await KiptrakNetwork.login(
                                   username: widget.user.userName,
                                   password: widget.user.password);
+                            } else if (response.statusCode == 200 &&
+                                !jsonDecode(response.body)['validated']) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text("Wrong Code Provided! Try Again!"),
+                                  backgroundColor: Colors.pink,
+                                ),
+                              );
+                              return;
+                            } else if (response.statusCode == 400) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      "Error verifying user: Check your username and email"),
+                                  backgroundColor: Colors.pink,
+                                ),
+                              );
+                              return;
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -96,7 +121,8 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => MyHomeApp(user: widget.user),
+                                    builder: (context) =>
+                                        MyHomeApp(user: widget.user),
                                   ));
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(

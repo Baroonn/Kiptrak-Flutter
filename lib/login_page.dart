@@ -1,15 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:kiptrak/network.dart';
 import 'package:kiptrak/verify_user_page.dart';
-import 'Assignment.dart';
 import 'User.dart';
-import 'create_account_page.dart';
-import 'custom_form.dart';
 import 'database.dart';
 import 'home_page.dart';
 
@@ -115,11 +108,10 @@ class _LoginPageState extends State<LoginPage> {
 
                                 if(response.statusCode == 200){
                                   var body = jsonDecode(response.body);
-                                  var valid = body['valid'];
                                   var token = body['token'];
-                                  if(valid != null && valid == true){
+                                  if(token != null && token==false){
                                     var user = User(userName: _userCtl.text, password: _passCtl.text, email: widget.email);
-                                    Navigator.pushReplacement(
+                                    Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => VerifyUserPage(user: user),
@@ -164,22 +156,22 @@ class _LoginPageState extends State<LoginPage> {
                             child: const Text('LOGIN'),
                           ),
                           const SizedBox(height: 15.0),
-                          RichText(
-                            text: TextSpan(
-                                text:'Not a user? ',
-                                children: [
-                                  TextSpan(
-                                      text: 'Create Account',
-                                      style: TextStyle(color: Colors.blue),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = (){
-                                          Navigator.pushReplacement(context,
-                                            MaterialPageRoute(builder: (context)=> CreateAccountPage(email: widget.email)),);
-                                        }
-                                  )
-                                ]
-                            ),
-                          )
+                          // RichText(
+                          //   text: TextSpan(
+                          //       text:'Not a user? ',
+                          //       children: [
+                          //         TextSpan(
+                          //             text: 'Create Account',
+                          //             style: TextStyle(color: Colors.blue),
+                          //             recognizer: TapGestureRecognizer()
+                          //               ..onTap = (){
+                          //                 Navigator.pushReplacement(context,
+                          //                   MaterialPageRoute(builder: (context)=> CreateAccountPage(email: widget.email)),);
+                          //               }
+                          //         )
+                          //       ]
+                          //   ),
+                          // )
                           // Add TextFormFields and ElevatedButton here.
                         ],
                       ),

@@ -1,19 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:developer' as logDev;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:kiptrak/database.dart';
-import 'package:kiptrak/home_page.dart';
 import 'package:kiptrak/network.dart';
 import 'package:kiptrak/verify_user_page.dart';
-import 'Assignment.dart';
 import 'User.dart';
-import 'custom_form.dart';
-import 'package:http/http.dart' as http;
-
 import 'login_page.dart';
 
 class CreateAccountPage extends StatefulWidget {
@@ -233,7 +226,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                       style: TextStyle(color: Colors.blue),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = (){
-                                          Navigator.pushReplacement(context,
+                                          Navigator.push(context,
                                             MaterialPageRoute(builder: (context)=> LoginPage(email: _emailCtl.text)),);
                                         }
                                   )

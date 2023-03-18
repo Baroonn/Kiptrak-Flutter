@@ -25,10 +25,10 @@ class KiptrakDatabase{
           desc TEXT,
           course TEXT,
           lecturer TEXT,
-          dateDue DATETIME,
+          dateDue INTEGER,
           notes TEXT,
           createdBy TEXT,
-          createdAt DATETIME,
+          createdAt INTEGER,
           status TEXT,
           imagePath TEXT)
            ''',
@@ -40,7 +40,7 @@ class KiptrakDatabase{
           desc TEXT,
           course TEXT,
           lecturer TEXT,
-          dateDue DATETIME,
+          dateDue INTEGER,
           notes TEXT,
           status TEXT,
           imagePath TEXT)
@@ -132,7 +132,7 @@ class KiptrakDatabase{
   static Future<void> updateLocalAssignmentStatus(int id, String status) async {
     final db = await database;
 
-    int count = await db.rawUpdate(
+    int _ = await db.rawUpdate(
         'UPDATE local_assignments SET status = ? WHERE id = ?',
         [status, id]
     );
@@ -165,16 +165,20 @@ class KiptrakDatabase{
   static Future<List<AssignmentReadDto>> getLocalAssignments() async {
     final db = await database;
 
-    final List<Map<String, dynamic>> maps = await db.query('local_assignments');
-    logDev.log(maps.toString());
-    var tobeReturned = List.generate(maps.length, (i){
-      AssignmentReadDto a = AssignmentReadDto(
+    final List<Map<String, dynamic>> maps = await db.query(
+        'local_assignments',
+      where: 'dateDue > ?',
+      whereArgs: [DateTime.now().add(Duration(days: -2)).millisecondsSinceEpoch]
+    );
+    //logDev.log(maps[0]['dateDue']);
+    return List.generate(maps.length, (i){
+      return AssignmentReadDto(
           id: maps[i]['id'],
           title: maps[i]['title'],
           desc: maps[i]['desc'],
           course: maps[i]['course'],
           lecturer: maps[i]['lecturer'],
-          dateDue: DateTime.parse(maps[i]['dateDue']),
+          dateDue: DateTime.fromMillisecondsSinceEpoch(maps[i]['dateDue']),
           notes: maps[i]['notes'],
           status: AssignmentStatus
               .values
@@ -183,16 +187,7 @@ class KiptrakDatabase{
           ),
           imagePath: maps[i]['imagePath']
       );
-      if((a.dateDue.difference(DateTime.now()).inSeconds/86400).ceil() >= -2){
-        return a;
-      }
-      else{
-        a.status = AssignmentStatus.closed;
-        return a;
-      }
-
     });
-    return tobeReturned.where((x)=>x.status != AssignmentStatus.closed).toList();
   }
 
   static Future<void> deleteLocalAssignments(int id) async{

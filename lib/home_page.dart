@@ -12,6 +12,7 @@ import 'database.dart';
 
 class MyHomeApp extends StatefulWidget {
   User user;
+
   MyHomeApp({Key? key, required this.user}) : super(key: key);
 
   @override
@@ -50,9 +51,10 @@ class _MyHomeAppState extends State<MyHomeApp> {
     setState(() {});
   }
 
-  Future<void> _showContextMenu(BuildContext context, AssignmentReadDto assignment) async {
+  Future<void> _showContextMenu(
+      BuildContext context, AssignmentReadDto assignment) async {
     final RenderObject? overlay =
-        Overlay.of(context)?.context.findRenderObject();
+        Overlay.of(context).context.findRenderObject();
     final result = await showMenu(
         context: context,
         color: Color(0xFF152d32),
@@ -88,28 +90,28 @@ class _MyHomeAppState extends State<MyHomeApp> {
         KiptrakDatabase.deleteLocalAssignments(assignment.id);
         break;
       case 'Answer':
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => SearchUserPage(searchTerm: assignment.title),
-          )
-        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SearchUserPage(searchTerm: assignment.title),
+        ));
         break;
     }
   }
 
-  String getCardStatus(index){
-    var daysLeft = (currentAssignments[index].dateDue.difference(DateTime.now()).inSeconds/86400).ceil();
+  String getCardStatus(index) {
+    var daysLeft = (currentAssignments[index]
+                .dateDue
+                .difference(DateTime.now())
+                .inSeconds /
+            86400)
+        .ceil();
 
-    if(daysLeft == 1){
+    if (daysLeft == 1) {
       return '1 day left';
-    }
-    else if(daysLeft == 0){
+    } else if (daysLeft == 0) {
       return '0 days left';
-    }
-    else if(daysLeft < 0){
+    } else if (daysLeft < 0) {
       return 'Overdue';
-    }
-    else{
+    } else {
       return '$daysLeft days left';
     }
   }
@@ -141,25 +143,21 @@ class _MyHomeAppState extends State<MyHomeApp> {
                       height: 250.0,
                       decoration: BoxDecoration(
                         color: Color(0xFF152d32),
-                        //   borderRadius: BorderRadius.only(
-                        //   bottomLeft: Radius.circular(20.0),
-                        //   bottomRight: Radius.circular(20.0)
-                        // )
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Hello, ${widget.user.userName??""}',
+                            'Hello, ${widget.user.userName}',
                             textAlign: TextAlign.left,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 35,
                                 color: Colors.white,
                                 fontFamily: ''),
                           ),
                           Text(formattedDate,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 15,
                                 color: Colors.white70,
                                 fontStyle: FontStyle.italic,
@@ -168,15 +166,11 @@ class _MyHomeAppState extends State<MyHomeApp> {
                             child: ListView(
                               scrollDirection: Axis.horizontal,
                               children: [
-                                // FractionallySizedBox(
-                                //   widthFactor: 0.7,
-                                //   heightFactor: 0.8,
-                                // ),
                                 Container(
                                     margin:
-                                        EdgeInsets.only(top: 20.0, right: 20.0),
-                                    padding: EdgeInsets.all(20.0),
-                                    decoration: BoxDecoration(
+                                        const EdgeInsets.only(top: 20.0, right: 20.0),
+                                    padding: const EdgeInsets.all(20.0),
+                                    decoration: const BoxDecoration(
                                       color: Colors.pink,
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(10.0),
@@ -190,7 +184,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                       children: [
                                         Container(
                                           margin: EdgeInsets.only(right: 15.0),
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.hourglass_bottom_rounded,
                                             size: 50.0,
                                             color: Colors.white,
@@ -200,7 +194,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                           text: TextSpan(
                                               text:
                                                   'Pending \n${assignments?.where((x) => x.status == AssignmentStatus.pending).toList().length ?? 0}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 20.0,
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -222,10 +216,10 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                       ],
                                     )),
                                 Container(
-                                    margin:
-                                        EdgeInsets.only(top: 20.0, right: 20.0),
-                                    padding: EdgeInsets.all(20.0),
-                                    decoration: BoxDecoration(
+                                    margin: const EdgeInsets.only(
+                                        top: 20.0, right: 20.0),
+                                    padding: const EdgeInsets.all(20.0),
+                                    decoration: const BoxDecoration(
                                       color: Colors.green,
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(10.0),
@@ -236,8 +230,9 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                     height: 90.0,
                                     child: Row(children: [
                                       Container(
-                                        margin: EdgeInsets.only(right: 15.0),
-                                        child: Icon(
+                                        margin:
+                                            const EdgeInsets.only(right: 15.0),
+                                        child: const Icon(
                                           Icons.check_circle,
                                           size: 50.0,
                                           color: Colors.white,
@@ -247,7 +242,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                         text: TextSpan(
                                             text:
                                                 'Completed \n${assignments?.where((x) => x.status == AssignmentStatus.completed).toList().length ?? 0}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 20.0,
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
@@ -268,10 +263,10 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                       ),
                                     ])),
                                 Container(
-                                    margin:
-                                        EdgeInsets.only(top: 20.0, right: 20.0),
-                                    padding: EdgeInsets.all(20.0),
-                                    decoration: BoxDecoration(
+                                    margin: const EdgeInsets.only(
+                                        top: 20.0, right: 20.0),
+                                    padding: const EdgeInsets.all(20.0),
+                                    decoration: const BoxDecoration(
                                       color: Colors.lightGreen,
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(10.0),
@@ -285,7 +280,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                       children: [
                                         Container(
                                           margin: EdgeInsets.only(right: 15.0),
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.view_agenda_outlined,
                                             size: 50.0,
                                             color: Colors.white,
@@ -295,7 +290,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                           text: TextSpan(
                                               text:
                                                   'View All \n${assignments?.length ?? 0}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 20.0,
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -327,7 +322,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                           fontWeight: FontWeight.bold,
                         )),
                   ),
-                  if(assignments.length>0)
+                  if (assignments.length > 0)
                     Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -336,50 +331,50 @@ class _MyHomeAppState extends State<MyHomeApp> {
                           return Column(
                             children: [
                               GestureDetector(
-                                onTap:(){
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => AssignmentDetailsPage(ard: currentAssignments[index]),
-                                      )
-                                  );
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AssignmentDetailsPage(
+                                        ard: currentAssignments[index]),
+                                  ));
                                 },
                                 onLongPress: () async {
                                   await _showContextMenu(
                                       context, currentAssignments[index]);
-                                  setState(() {
-
-                                  });
+                                  setState(() {});
                                 },
-                                onTapDown: (details) => _getTapPosition(details),
+                                onTapDown: (details) =>
+                                    _getTapPosition(details),
                                 child: Dismissible(
                                     key: ValueKey(123),
                                     direction: DismissDirection.endToStart,
                                     background: Container(
-                                        color: currentAssignments[index].status ==
-                                            AssignmentStatus.pending
-                                            ? Colors.greenAccent
-                                            : Colors.pink,
-                                        child: Icon(
-                                            currentAssignments[index].status ==
-                                                AssignmentStatus.pending
-                                                ? Icons.check_circle
-                                                : Icons.hourglass_bottom_rounded,
-                                            color: Colors.white,
-                                            size: 40.0),
-                                        alignment: Alignment.centerRight,
-                                        padding: EdgeInsets.only(right: 15.0)),
+                                      color: currentAssignments[index].status ==
+                                              AssignmentStatus.pending
+                                          ? Colors.greenAccent
+                                          : Colors.pink,
+                                      alignment: Alignment.centerRight,
+                                      padding:
+                                          const EdgeInsets.only(right: 15.0),
+                                      child: Icon(
+                                          currentAssignments[index].status ==
+                                                  AssignmentStatus.pending
+                                              ? Icons.check_circle
+                                              : Icons.hourglass_bottom_rounded,
+                                          color: Colors.white,
+                                          size: 40.0),
+                                    ),
                                     confirmDismiss: (direction) async {
                                       await KiptrakDatabase
                                           .updateLocalAssignmentStatus(
-                                          currentAssignments[index].id,
-                                          currentAssignments[index].status ==
-                                              AssignmentStatus.pending
-                                              ? AssignmentStatus
-                                              .completed.name
-                                              : AssignmentStatus
-                                              .pending.name);
+                                              currentAssignments[index].id,
+                                              currentAssignments[index]
+                                                          .status ==
+                                                      AssignmentStatus.pending
+                                                  ? AssignmentStatus
+                                                      .completed.name
+                                                  : AssignmentStatus
+                                                      .pending.name);
                                       setState(() {});
-                                      print("update executed");
                                       return false;
                                     },
                                     child: Container(
@@ -395,7 +390,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                         ),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                                 '${currentAssignments[index].title}',
@@ -406,43 +401,49 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                                 )),
                                             Text(
                                                 '${currentAssignments[index].course}',
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontStyle: FontStyle.italic,
                                                 )),
                                             Row(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text(
                                                     'Lecturer: ${currentAssignments[index].lecturer}',
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       color: Colors.grey,
-                                                      fontStyle: FontStyle.italic,
+                                                      fontStyle:
+                                                          FontStyle.italic,
                                                     )),
                                                 Container(
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                       horizontal: 10.0,
                                                       vertical: 5.0),
-                                                  decoration: BoxDecoration(
+                                                  decoration: const BoxDecoration(
                                                       color: Color(0xFFFAF9F6),
                                                       borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              10.0))),
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10.0))),
                                                   child:
-                                                  Text(
-                                                      getCardStatus(index),
-                                                      style: TextStyle(
-                                                        color: (currentAssignments[index].dateDue.difference(DateTime.now()).inSeconds/86400).ceil()<2?Colors.pink:Colors.green,
-                                                      )),
+                                                      Text(getCardStatus(index),
+                                                          style: TextStyle(
+                                                            color: (currentAssignments[index].dateDue.difference(DateTime.now()).inSeconds /
+                                                                            86400)
+                                                                        .ceil() <
+                                                                    2
+                                                                ? Colors.pink
+                                                                : Colors.green,
+                                                          )),
                                                 ),
                                               ],
                                             )
                                           ],
                                         ))),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10.0,
                               )
                             ],
@@ -452,23 +453,23 @@ class _MyHomeAppState extends State<MyHomeApp> {
                     )
                   else
                     Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: const Text(
-                          'You currently do not \nhave an assignment',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 24.0,
-                            fontFamily: 'Arial',
-                          ),
-                        )
-                      )
-                    ),
+                        child: Container(
+                            alignment: Alignment.center,
+                            child: const Text(
+                              'You currently do not \nhave an assignment',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 24.0,
+                                fontFamily: 'Arial',
+                              ),
+                            ))),
                 ],
               );
             }
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }),
       // floatingActionButton: SpeedDial(
       //   animatedIcon: AnimatedIcons.add_event,
@@ -518,15 +519,13 @@ class _MyHomeAppState extends State<MyHomeApp> {
       //   ],
       // ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: ()async{
+        onPressed: () async {
           await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context)=> const CreateAssignmentPage()),
+            MaterialPageRoute(
+                builder: (context) => const CreateAssignmentPage()),
           );
-          setState(() {
-
-          });
-          print("home");
+          setState(() {});
         },
         label: const Text('Add'),
         icon: const Icon(Icons.add),

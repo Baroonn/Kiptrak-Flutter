@@ -7,7 +7,7 @@ class Assignment {
   String desc;
   String course;
   String lecturer;
-  DateTime dateDue;
+  int dateDue;
   String? notes;
   String createdBy;
   DateTime createdAt;
@@ -33,7 +33,7 @@ class Assignment {
       'desc': desc,
       'course': course,
       'lecturer': lecturer,
-      'dateDue': dateDue.toString(),
+      'dateDue': DateTime.fromMillisecondsSinceEpoch(dateDue).toString(),
       'notes': notes,
       'createdBy': createdBy,
       'createdAt': createdAt,
@@ -49,7 +49,7 @@ class AssignmentCreateDto{
   String desc;
   String course;
   String lecturer;
-  DateTime dateDue;
+  int dateDue;
   String? notes;
   String? imagePath;
   AssignmentStatus status;
@@ -73,7 +73,7 @@ class AssignmentCreateDto{
       'desc': desc,
       'course': course,
       'lecturer': lecturer,
-      'dateDue': dateDue.toString(),
+      'dateDue': dateDue,
       'notes': notes,
       'status': status.name,
       'imagePath': imagePath

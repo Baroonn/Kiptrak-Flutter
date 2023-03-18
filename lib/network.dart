@@ -1,5 +1,4 @@
 import 'package:http/http.dart';
-import 'Assignment.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -14,8 +13,6 @@ class KiptrakNetwork{
       },
       body: jsonEncode(user.toMap())
     );
-
-
   }
 
   static Future<Response> login({required String username,
@@ -32,9 +29,9 @@ class KiptrakNetwork{
     );
   }
 
-  static Future<Response> verify_user({required String token, required String email}) async{
+  static Future<Response> verify_user({required String code, required String email, required String username}) async{
     return http.get(
-      Uri.parse('http://10.0.2.2:5000/api/1/auth/validatetoken?token=$token&email=$email'),
+      Uri.parse('http://10.0.2.2:5000/api/1/auth/validatecode?code=$code&email=$email&username=$username'),
     );
   }
 

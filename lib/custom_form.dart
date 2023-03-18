@@ -4,7 +4,6 @@ import 'dart:developer' as logDev;
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:kiptrak/database.dart';
-import 'package:kiptrak/home_page.dart';
 
 import 'Assignment.dart';
 
@@ -239,18 +238,18 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Processing Data')),
                   );
+                  logDev.log(DateTime.parse(dateCtl.text).millisecondsSinceEpoch.toString());
                   AssignmentCreateDto fresh = AssignmentCreateDto(
                     title: titleCtl.text,
                     desc: descCtl.text,
                     course: courseCtl.text,
                     lecturer: lecturerCtl.text,
-                    dateDue: DateTime.parse(dateCtl.text),
+                    dateDue: DateTime.parse(dateCtl.text).millisecondsSinceEpoch,
                     notes: notesCtl.text,
                     imagePath: result != null? result!.files.map((x)=> x.path).join("|"):"",
                     status: AssignmentStatus.pending
                   );
                   await KiptrakDatabase.insertLocalAssignment(fresh);
-                  await KiptrakDatabase.getLocalAssignments();
                   titleCtl.clear(); descCtl.clear(); courseCtl.clear();
                   lecturerCtl.clear(); dateCtl.clear(); notesCtl.clear();
                 }
