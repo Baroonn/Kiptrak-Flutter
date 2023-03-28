@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kiptrak/search_user_page.dart';
 
-import 'Assignment.dart';
-import 'User.dart';
+import 'models/Assignment.dart';
+import 'models/User.dart';
 import 'assignment_detail_page.dart';
 import 'create_assignment_page.dart';
-import 'database.dart';
+import 'io/database.dart';
 
 class MyHomeApp extends StatefulWidget {
   User user;
@@ -171,7 +171,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                         const EdgeInsets.only(top: 20.0, right: 20.0),
                                     padding: const EdgeInsets.all(20.0),
                                     decoration: const BoxDecoration(
-                                      color: Colors.pink,
+                                      color: Colors.deepOrange,
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(10.0),
                                       ),
@@ -220,7 +220,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                         top: 20.0, right: 20.0),
                                     padding: const EdgeInsets.all(20.0),
                                     decoration: const BoxDecoration(
-                                      color: Colors.green,
+                                      color: Color(0xFF438029),
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(10.0),
                                       ),
@@ -267,7 +267,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                         top: 20.0, right: 20.0),
                                     padding: const EdgeInsets.all(20.0),
                                     decoration: const BoxDecoration(
-                                      color: Colors.lightGreen,
+                                      color: Colors.deepPurple,
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(10.0),
                                       ),

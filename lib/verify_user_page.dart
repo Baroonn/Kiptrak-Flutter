@@ -4,11 +4,11 @@ import 'dart:developer' as logDev;
 import 'package:flutter/material.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:http/http.dart';
-import 'package:kiptrak/database.dart';
-import 'package:kiptrak/home_page.dart';
-import 'package:kiptrak/network.dart';
+import 'package:kiptrak/io/database.dart';
+import 'package:kiptrak/home_page_test.dart';
+import 'package:kiptrak/io/network.dart';
 
-import 'User.dart';
+import 'models/User.dart';
 
 class VerifyUserPage extends StatefulWidget {
   User user;
@@ -35,15 +35,15 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
             color: Color(0xFF152d32),
             child: Column(
               children: [
-                Text('Enter Code: ',
+                const Text('Enter Code: ',
                     style: TextStyle(fontSize: 30.0, color: Colors.white)),
-                Text('Please provide the 6 digits token sent to your mail',
+                const Text('Please provide the 6 digits token sent to your mail',
                     style: TextStyle(color: Colors.white)),
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 VerificationCode(
-                    textStyle: TextStyle(fontSize: 20.0, color: Colors.pink),
+                    textStyle: const TextStyle(fontSize: 20.0, color: Colors.pink),
                     fullBorder: true,
                     length: 6,
                     onCompleted: (String value) {
@@ -56,64 +56,56 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
                         _onEditing = value;
                       });
                     }),
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 40),
-                      backgroundColor: Colors.pinkAccent,
+                      minimumSize: const Size(double.infinity, 40),
+                      backgroundColor: Colors.deepOrange,
                       disabledBackgroundColor: Colors.grey,
                     ),
                     onPressed: _code == null
                         ? null
                         : () async {
                             logDev.log("Verifying User...");
-                            var response = await KiptrakNetwork.verify_user(
+                            var response = await KiptrakNetwork.verifyUser(
                                 code: _code!,
-                                email: widget.user.email,
                                 username: widget.user.userName);
                             logDev.log("After Verifying User Request...");
                             Response loginResponse;
-                            if (response.statusCode == 200 &&
-                                jsonDecode(response.body)['validated']) {
+                            if (response.statusCode == 200) {
                               logDev.log("Username: ${widget.user.userName}");
                               logDev.log("Password: ${widget.user.password}");
                               loginResponse = await KiptrakNetwork.login(
                                   username: widget.user.userName,
                                   password: widget.user.password);
-                            } else if (response.statusCode == 200 &&
-                                !jsonDecode(response.body)['validated']) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content:
-                                      Text("Wrong Code Provided! Try Again!"),
-                                  backgroundColor: Colors.pink,
+                                SnackBar(
+                                  content: Text(jsonDecode(response.body)["message"]),
+                                  backgroundColor: Colors.deepOrange,
                                 ),
                               );
-                              return;
-                            } else if (response.statusCode == 400) {
+                            }else if (response.statusCode == 400) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      "Error verifying user: Check your username and email"),
-                                  backgroundColor: Colors.pink,
+                                SnackBar(
+                                  content: Text(jsonDecode(response.body)["message"]),
+                                  backgroundColor: Colors.deepOrange,
                                 ),
                               );
                               return;
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Error verifying user"),
-                                  backgroundColor: Colors.pink,
+                                SnackBar(
+                                  content: Text("Error verifying user: ${jsonDecode(response.body)["message"]}"),
+                                  backgroundColor: Colors.deepOrange,
                                 ),
                               );
                               return;
                             }
                             logDev.log(loginResponse.statusCode.toString());
                             if (loginResponse.statusCode == 200) {
-                              var token =
-                                  jsonDecode(loginResponse.body)['token'];
+                              var token = jsonDecode(loginResponse.body)['token'];
                               logDev.log(token);
                               widget.user.token = token;
                               await KiptrakDatabase.insertUserDetails(

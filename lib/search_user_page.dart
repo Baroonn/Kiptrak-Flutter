@@ -4,29 +4,32 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'Assignment.dart';
+import 'models/Assignment.dart';
 import 'constants.dart';
 import 'custom_form.dart';
 
 class SearchUserPage extends StatefulWidget {
 
-  const SearchUserPage({Key? key, this.searchTerm}) : super(key: key);
+  SearchUserPage({Key? key, required this.searchTerm}) : super(key: key);
 
-  final String? searchTerm;
+  String searchTerm;
 
   @override
-  State<SearchUserPage> createState() => _SearchUserPageState(searchTerm: searchTerm);
+  State<SearchUserPage> createState() => _SearchUserPageState();
 }
 
 class _SearchUserPageState extends State<SearchUserPage> {
   TextEditingController _gptCtl = TextEditingController();
   TextEditingController _searchCtl = TextEditingController();
 
-  var searchTerm;
   var searchCount;
+  @override
+  void initState(){
+    _searchCtl.text = widget.searchTerm;
+    super.initState();
+  }
 
-  _SearchUserPageState({this.searchTerm}){
-    _searchCtl.text = searchTerm;
+  _SearchUserPageState(){
     searchCount = 0;
   }
 
@@ -51,7 +54,6 @@ class _SearchUserPageState extends State<SearchUserPage> {
     );
 
     Map<String, dynamic> newresponse = jsonDecode(response.body);
-    print(newresponse);
     return newresponse['choices'][0]['message']['content'].trim();
   }
 

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:kiptrak/network.dart';
+import 'package:kiptrak/io/network.dart';
 import 'package:kiptrak/verify_user_page.dart';
-import 'User.dart';
-import 'database.dart';
-import 'home_page.dart';
+import 'models/User.dart';
+import 'io/database.dart';
+import 'home_page_test.dart';
 
 class LoginPage extends StatefulWidget {
   String email;
@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderSide: BorderSide.none,
                               ),
                               labelStyle: TextStyle(
-                                color: Colors.pink,
+                                color: Colors.deepOrange,
                               ),
                               labelText: 'Username*',
                               fillColor: Colors.white,
@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderSide: BorderSide.none,
                               ),
                               labelStyle: TextStyle(
-                                color: Colors.pink,
+                                color: Colors.deepOrange,
                               ),
                               labelText: 'Password*',
                               fillColor: Colors.white,
@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(double.infinity, 40),
-                              backgroundColor: Colors.pinkAccent,
+                              backgroundColor: Colors.deepOrange,
                             ),
                             onPressed: () async {
                               // Validate returns true if the form is valid, or false otherwise.
@@ -109,15 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                                 if(response.statusCode == 200){
                                   var body = jsonDecode(response.body);
                                   var token = body['token'];
-                                  if(token != null && token==false){
-                                    var user = User(userName: _userCtl.text, password: _passCtl.text, email: widget.email);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => VerifyUserPage(user: user),
-                                        ));
-                                  }
-                                  else if(token!=null){
+                                  if(token!=null){
                                     var user = User(userName: _userCtl.text, password: _passCtl.text, email: widget.email, token: token);
                                     await KiptrakDatabase.insertUserDetails(user: user);
                                     Navigator.pushReplacement(
@@ -130,24 +122,32 @@ class _LoginPageState extends State<LoginPage> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text("Error logging in"),
-                                        backgroundColor: Colors.pink,
+                                        backgroundColor: Colors.deepOrange,
                                       ),
                                     );
                                   }
                                 }
+                                else if(response.statusCode == 403){
+                                  var user = User(userName: _userCtl.text, password: _passCtl.text, email: widget.email);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => VerifyUserPage(user: user),
+                                      ));
+                                }
                                 else if(response.statusCode == 401){
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text("Invalid Username or Password"),
-                                      backgroundColor: Colors.pink,
+                                      content: Text(jsonDecode(response.body)["message"]),
+                                      backgroundColor: Colors.deepOrange,
                                     ),
                                   );
                                 }
                                 else{
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text("Error logging in"),
-                                      backgroundColor: Colors.pink,
+                                      content: Text("Error logging in: ${jsonDecode(response.body)["message"]}"),
+                                      backgroundColor: Colors.deepOrange,
                                     ),
                                   );
                                 }

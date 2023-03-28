@@ -3,26 +3,28 @@ import 'dart:ffi';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'Assignment.dart';
+import 'models/Assignment.dart';
 import 'custom_form.dart';
 
 class AssignmentDetailsPage extends StatefulWidget {
-  final AssignmentReadDto ard;
+  AssignmentGlobalReadDto ard;
 
-  const AssignmentDetailsPage({Key? key, required AssignmentReadDto this.ard}) : super(key: key);
+  AssignmentDetailsPage({Key? key, required AssignmentGlobalReadDto this.ard}) : super(key: key);
 
   @override
-  State<AssignmentDetailsPage> createState() => _AssignmentDetailsPageState(ard: ard);
+  State<AssignmentDetailsPage> createState() => _AssignmentDetailsPageState();
 }
 
 class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
-
-  AssignmentReadDto ard;
-
-  _AssignmentDetailsPageState({required AssignmentReadDto this.ard}){
-    titleCtl.text = ard.title;
-  }
   TextEditingController titleCtl = TextEditingController();
+
+  @override
+  void initState(){
+    titleCtl.text = widget.ard.title;
+    super.initState();
+  }
+  _AssignmentDetailsPageState();
+
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -38,7 +40,6 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
               children: [
                 TextField(
                   controller: titleCtl,
-
                 )
               ],
             )

@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:developer' as logDev;
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:kiptrak/database.dart';
+import 'package:http/http.dart';
+import 'package:kiptrak/io/database.dart';
+import 'package:kiptrak/io/network.dart';
 
-import 'Assignment.dart';
+import 'models/Assignment.dart';
 
 // Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
@@ -238,20 +241,70 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Processing Data')),
                   );
-                  logDev.log(DateTime.parse(dateCtl.text).millisecondsSinceEpoch.toString());
-                  AssignmentCreateDto fresh = AssignmentCreateDto(
+                  //logDev.log(DateTime.parse(dateCtl.text).millisecondsSinceEpoch.toString());
+                  AssignmentOnlineCreateDto fresh = AssignmentOnlineCreateDto(
                     title: titleCtl.text,
                     desc: descCtl.text,
                     course: courseCtl.text,
                     lecturer: lecturerCtl.text,
-                    dateDue: DateTime.parse(dateCtl.text).millisecondsSinceEpoch,
+                    dateDue: DateTime.parse(dateCtl.text),
                     notes: notesCtl.text,
-                    imagePath: result != null? result!.files.map((x)=> x.path).join("|"):"",
-                    status: AssignmentStatus.pending
+                    //imagePath: result != null? result!.files.map((x)=> x.path).join("|"):"",
                   );
-                  await KiptrakDatabase.insertLocalAssignment(fresh);
-                  titleCtl.clear(); descCtl.clear(); courseCtl.clear();
-                  lecturerCtl.clear(); dateCtl.clear(); notesCtl.clear();
+                  Response response;
+                  try{
+                    response = await KiptrakNetwork.createOnlineAssignment(assignment: fresh);
+                  } on Exception catch (e){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Network Issues Detected"),
+                        backgroundColor: Colors.orange,
+                      ),
+                    );
+                    return;
+                  }
+
+                  if(response.statusCode == 201){
+                    titleCtl.clear(); descCtl.clear(); courseCtl.clear();
+                    lecturerCtl.clear(); dateCtl.clear(); notesCtl.clear();
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Created Assignment Successfully! ${result != null?"Uploading Images Now":"" }"),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    
+                    if(result!= null){
+                      var imageUploadResponse = await KiptrakNetwork.uploadImages(id: jsonDecode(response.body)['id'].toString(), result: result!);
+                      if (imageUploadResponse.statusCode == 200){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Uploading Images Successfully"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                      else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Error Uploading Images"),
+                            backgroundColor: Colors.deepOrangeAccent,
+                          ),
+                        );
+                      }
+                    }
+                  }
+                  else{
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Error Creating Assignment"),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
+                  //await KiptrakDatabase.insertLocalAssignment(fresh);
+
                 }
               },
 

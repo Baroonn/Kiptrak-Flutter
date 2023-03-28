@@ -4,8 +4,8 @@ import 'dart:developer' as logDev;
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'Assignment.dart';
-import 'User.dart';
+import '../models/Assignment.dart';
+import '../models/User.dart';
 
 class KiptrakDatabase{
   static var database = createDatabase();
@@ -20,17 +20,18 @@ class KiptrakDatabase{
       version: 1,
       onCreate: (db, version) {
         db.execute(
-          '''CREATE TABLE global_assignments(id TEXT,
+          '''CREATE TABLE global_assignments(id INTEGER UNIQUE,
           title TEXT,
-          desc TEXT,
+          description TEXT,
           course TEXT,
           lecturer TEXT,
-          dateDue INTEGER,
+          datedue INTEGER,
           notes TEXT,
-          createdBy TEXT,
-          createdAt INTEGER,
-          status TEXT,
-          imagePath TEXT)
+          images TEXT,
+          createdby INTEGER,
+          createdate TEXT,
+          username TEXT,
+          status TEXT)
            ''',
         );
 
@@ -90,6 +91,13 @@ class KiptrakDatabase{
     return maps.isNotEmpty;
   }
 
+  static Future<void> updateToken({required String token}) async {
+    final db = await database;
+    await db.update("user_details", {
+      'token': token
+    });
+  }
+
   static Future<void> insertUserDetails ({required User user}) async {
     final db = await database;
     logDev.log("In InsertUserDetails");
@@ -109,14 +117,21 @@ class KiptrakDatabase{
     logDev.log("Left InsertUserDetails");
   }
 
-  static Future<void> insertGlobalAssignment(Assignment assignment) async {
+  static Future<void> insertGlobalAssignment(AssignmentOnlineReadDto assignment) async {
     final db = await createDatabase();
+
+    var maps = await db.query('global_assignments', where: 'id = ?', whereArgs: [assignment.id]);
+    print("In global assignment");
+    print(maps.length);
+    if (maps.isNotEmpty){
+      return;
+    }
+    print("Out global assignment");
     await db.insert(
       'global_assignments',
       assignment.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-
   }
 
   static Future<void> insertLocalAssignment(AssignmentCreateDto assignment) async {
@@ -136,6 +151,17 @@ class KiptrakDatabase{
         'UPDATE local_assignments SET status = ? WHERE id = ?',
         [status, id]
     );
+  }
+
+  static Future<void> updateGlobalAssignmentStatus(int id, String status) async {
+    final db = await database;
+
+    print(id);print(status);
+    int count = await db.rawUpdate(
+        'UPDATE global_assignments SET status = ? WHERE id = ?',
+        [status, id]
+    );
+    print(count);
   }
 
   static Future<List<Assignment>> assignments() async {
@@ -187,6 +213,21 @@ class KiptrakDatabase{
           ),
           imagePath: maps[i]['imagePath']
       );
+    });
+  }
+
+  static Future<List<AssignmentGlobalReadDto>> getGlobalAssignments() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query(
+        'global_assignments',
+        where: 'datedue > ? AND status IN (\'pending\', \'completed\')',
+        whereArgs: [DateTime.now().add(Duration(days: -2)).millisecondsSinceEpoch]
+    );
+    logDev.log(maps.length.toString());
+    //logDev.log(maps[0]['dateDue']);
+    return List.generate(maps.length, (i){
+      return AssignmentGlobalReadDto.fromJson(maps[i]);
     });
   }
 

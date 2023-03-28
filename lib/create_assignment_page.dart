@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'Assignment.dart';
+import 'models/Assignment.dart';
 import 'custom_form.dart';
 
 class CreateAssignmentPage extends StatefulWidget {

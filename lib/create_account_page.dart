@@ -3,10 +3,10 @@ import 'dart:developer' as logDev;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:kiptrak/database.dart';
-import 'package:kiptrak/network.dart';
+import 'package:kiptrak/io/database.dart';
+import 'package:kiptrak/io/network.dart';
 import 'package:kiptrak/verify_user_page.dart';
-import 'User.dart';
+import 'models/User.dart';
 import 'login_page.dart';
 
 class CreateAccountPage extends StatefulWidget {
@@ -76,7 +76,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                 borderSide: BorderSide.none,
                               ),
                               labelStyle: TextStyle(
-                                color: Colors.pink,
+                                color: Colors.deepOrange,
                               ),
                               labelText: 'Username*',
                               fillColor: Colors.white,
@@ -87,7 +87,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                               contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                             ),
                           ),
-                          SizedBox(height: 30.0),
+                          SizedBox(height: 15.0),
                           TextFormField(
                             controller: _passCtl,
                             keyboardType: TextInputType.multiline,
@@ -110,7 +110,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                 borderSide: BorderSide.none,
                               ),
                               labelStyle: TextStyle(
-                                color: Colors.pink,
+                                color: Colors.deepOrange,
                               ),
                               labelText: 'Password*',
                               fillColor: Colors.white,
@@ -121,7 +121,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                               contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                             ),
                           ),
-                          SizedBox(height: 30.0),
+                          SizedBox(height: 15.0),
                           TextFormField(
                             controller: _emailCtl,
                             validator: (value) {
@@ -135,7 +135,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                 borderSide: BorderSide.none,
                               ),
                               labelStyle: TextStyle(
-                                color: Colors.pink,
+                                color: Colors.deepOrange,
                               ),
                               labelText: 'Email*',
                               fillColor: Colors.white,
@@ -146,7 +146,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                               contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                             ),
                           ),
-                          SizedBox(height: 30.0),
+                          SizedBox(height: 15.0),
                           TextFormField(
                             controller: _phoneCtl,
                             decoration: const InputDecoration(
@@ -154,7 +154,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                 borderSide: BorderSide.none,
                               ),
                               labelStyle: TextStyle(
-                                color: Colors.pink,
+                                color: Colors.deepOrange,
                               ),
                               labelText: 'Phone',
                               fillColor: Colors.white,
@@ -169,7 +169,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(double.infinity, 40),
-                              backgroundColor: Colors.pinkAccent,
+                              backgroundColor: Colors.deepOrange,
                             ),
                             onPressed: () async {
                               // Validate returns true if the form is valid, or false otherwise.
@@ -193,23 +193,22 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                   Navigator.push(context,
                                     MaterialPageRoute(builder: (context)=> VerifyUserPage(user: user)),);
                                 }
-                                else if(response.statusCode == 400){
+                                else if(response.statusCode == 500){
                                   Map<String, dynamic> responseBody = jsonDecode(response.body);
-                                  String message = "";
-                                  for(var i in responseBody.keys){
-                                    message += responseBody[i][0];
-                                    break;
-                                  }
+                                  String message = "Internal Server Error! Contact Support";
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(message),
-                                      backgroundColor: Colors.pink,),
+                                      backgroundColor: Colors.deepOrange,),
                                   );
                                 }
                                 else{
-                                  print(response.body);
+                                  Map<String, dynamic> responseBody = jsonDecode(response.body);
+                                  String message = responseBody['message'];
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Error creating user: ${response.statusCode.toString()}')),
+                                    SnackBar(
+                                      content: Text(message),
+                                      backgroundColor: Colors.deepOrange,),
                                   );
                                 }
                               }

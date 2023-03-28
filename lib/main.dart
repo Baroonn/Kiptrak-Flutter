@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kiptrak/create_account_page.dart';
-import 'package:kiptrak/database.dart';
+import 'package:kiptrak/io/database.dart';
 import 'package:kiptrak/verify_user_page.dart';
 import 'package:kiptrak/welcome_page.dart';
-import './home_page.dart';
+import './home_page_test.dart';
 import './create_assignment_page.dart';
-import 'User.dart';
+import 'models/User.dart';
 import 'login_page.dart';
 import 'search_user_page.dart';
 

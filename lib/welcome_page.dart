@@ -57,7 +57,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                       borderSide: BorderSide.none,
                                     ),
                                     labelStyle: TextStyle(
-                                      color: Colors.pink,
+                                      color: Colors.deepOrange,
                                     ),
                                     labelText: 'Email',
                                     fillColor: Colors.white,
@@ -71,7 +71,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                 ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       minimumSize: Size(double.infinity, 40),
-                                      backgroundColor: Colors.pinkAccent,
+                                      backgroundColor: Colors.deepOrange,
                                     ),
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
