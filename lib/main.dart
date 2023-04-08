@@ -8,7 +8,7 @@ import './home_page_test.dart';
 import './create_assignment_page.dart';
 import 'models/User.dart';
 import 'login_page.dart';
-import 'search_user_page.dart';
+import 'search_answer_page.dart';
 
 void main() async{
   await KiptrakDatabase.createDatabase();

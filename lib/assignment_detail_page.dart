@@ -9,7 +9,8 @@ import 'custom_form.dart';
 class AssignmentDetailsPage extends StatefulWidget {
   AssignmentGlobalReadDto ard;
 
-  AssignmentDetailsPage({Key? key, required AssignmentGlobalReadDto this.ard}) : super(key: key);
+  AssignmentDetailsPage({Key? key, required AssignmentGlobalReadDto this.ard})
+      : super(key: key);
 
   @override
   State<AssignmentDetailsPage> createState() => _AssignmentDetailsPageState();
@@ -17,12 +18,16 @@ class AssignmentDetailsPage extends StatefulWidget {
 
 class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
   TextEditingController titleCtl = TextEditingController();
-
+  List<String>? imagesArray;
   @override
-  void initState(){
+  void initState() {
     titleCtl.text = widget.ard.title;
+    if (widget.ard.images != null && widget.ard.images != "") {
+      imagesArray = widget.ard.images!.split("|");
+    }
     super.initState();
   }
+
   _AssignmentDetailsPageState();
 
   Widget build(BuildContext context) {
@@ -35,16 +40,34 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                TextField(
-                  controller: titleCtl,
-                )
-              ],
-            )
-          ),
-        )
-    );
+              padding: EdgeInsets.all(15.0),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: titleCtl,
+                  ),
+                  Text(
+                    widget.ard.description,
+                  ),
+                  Text(widget.ard.course),
+                  Text(widget.ard.lecturer),
+                  Text(widget.ard.dateDue.toString().split(' ')[0]),
+                  Text(widget.ard.notes ?? ""),
+                  if (widget.ard.images != null && widget.ard.images != "")
+                    for (var image in imagesArray!)
+                      Column(
+                        children: [
+                          Image.network(
+                            image,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          )
+                        ],
+                      )
+                ],
+              )),
+        ));
   }
 }

@@ -48,12 +48,79 @@ class KiptrakNetwork {
     }
   }
 
-  static Future<Response> verifyUser(
-      {required String code, required String username}) async {
+  static Future<Response> verifyUser({required String code, required String username}) async {
     return http.get(
       Uri.parse(
           '$baseUrl/api/v1/auth/validatecode?code=$code&username=$username'),
     );
+  }
+
+  static Future<Response> getFollowing() async {
+    var user = await KiptrakDatabase.getUser();
+    var token = user?.token;
+    var response =  await http.get(
+        Uri.parse(
+          '$baseUrl/api/v1/users/following',
+        ),
+        headers: <String, String>{
+          'Authorization': 'Bearer $token',
+        }
+    ).timeout(const Duration(seconds: 10));
+
+    if(response.statusCode == 403){
+      await loginAgain();
+      return await getFollowing();
+    }
+    else{
+      return response;
+    }
+  }
+
+  static Future<Response> getUsers({required String searchTerm}) async {
+    var user = await KiptrakDatabase.getUser();
+    var token = user?.token;
+    var response =  await http.get(
+      Uri.parse(
+        '$baseUrl/api/v1/users?search=$searchTerm',
+      ),
+        headers: <String, String>{
+          'Authorization': 'Bearer $token',
+        }
+    ).timeout(const Duration(seconds: 10));
+
+    if(response.statusCode == 403){
+      await loginAgain();
+      return await getUsers(searchTerm: searchTerm);
+    }
+    else{
+      return response;
+    }
+  }
+
+  static Future<Response?> followUser({required int id, required String action}) async {
+    if(action != 'follow' && action != 'unfollow'){
+      print(action);
+      return null;
+    }
+    print(action);
+    var user = await KiptrakDatabase.getUser();
+    var token = user?.token;
+    var response =  await http.get(
+        Uri.parse(
+          '$baseUrl/api/v1/users/$id/$action',
+        ),
+        headers: <String, String>{
+          'Authorization': 'Bearer $token',
+        }
+    ).timeout(const Duration(seconds: 10));
+
+    if(response.statusCode == 403 && jsonDecode(response.body)['message'] == 'Token invalid'){
+      await loginAgain();
+      return await followUser(id: id, action: action);
+    }
+    else{
+      return response;
+    }
   }
 
   static Future<Response> getOnlineAssignments() async {

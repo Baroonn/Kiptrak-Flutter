@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
-import 'package:kiptrak/search_user_page.dart';
+import 'package:kiptrak/search_answer_page.dart';
 
 import 'models/Assignment.dart';
 import 'models/User.dart';
@@ -91,7 +91,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
         break;
       case 'Answer':
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => SearchUserPage(searchTerm: assignment.title),
+          builder: (context) => SearchAnswerPage(searchTerm: assignment.title),
         ));
         break;
     }

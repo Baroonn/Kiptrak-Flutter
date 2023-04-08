@@ -8,6 +8,7 @@ import 'package:http/src/response.dart';
 //import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:kiptrak/io/network.dart';
+import 'package:kiptrak/search_answer_page.dart';
 import 'package:kiptrak/search_user_page.dart';
 
 import 'models/Assignment.dart';
@@ -64,9 +65,19 @@ class _MyHomeAppState extends State<MyHomeApp> {
                 overlay.paintBounds.size.height)),
         items: [
           const PopupMenuItem(
-            value: 'Answer',
+            value: 'searchTitle',
             child: Text(
-              'Find Answer',
+              'Search by Title',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const PopupMenuItem(
+            value: 'searchDesc',
+            child: Text(
+              'Search by Description',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -91,9 +102,14 @@ class _MyHomeAppState extends State<MyHomeApp> {
             assignment.id, AssignmentStatus.deleted.name);
         setState(() {});
         break;
-      case 'Answer':
+      case 'searchTitle':
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => SearchUserPage(searchTerm: assignment.title),
+          builder: (context) => SearchAnswerPage(searchTerm: assignment.title),
+        ));
+        break;
+      case 'searchDesc':
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SearchAnswerPage(searchTerm: assignment.description),
         ));
         break;
     }
@@ -183,14 +199,38 @@ class _MyHomeAppState extends State<MyHomeApp> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Hello, ${widget.user.userName[0].toUpperCase()}${widget.user.userName.substring(1).toLowerCase()}',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 35,
-                        color: Colors.white,
-                        fontFamily: ''),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Hello, ${widget.user.userName[0].toUpperCase()}${widget.user.userName.substring(1).toLowerCase()}',
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 35,
+                            color: Colors.white,
+                            fontFamily: ''),
+                      ),
+                      Container(
+                          padding: const EdgeInsets.only(right: 15.0),
+                          child: TextButton(
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SearchUserPage()),
+                              );
+                              setState(() {
+                                reload = true;
+                              });
+                            },
+                            child: const Icon(
+                              Icons.person_add,
+                              color: Colors.white,
+                              size: 25.0,
+                            ),
+                          )),
+                    ],
                   ),
                   Text(formattedDate,
                       style: const TextStyle(
@@ -333,7 +373,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                       return RichText(
                                         text: TextSpan(
                                             text:
-                                            'View All \n${assignments.value?.length ?? 0}',
+                                                'View All \n${assignments.value?.length ?? 0}',
                                             style: const TextStyle(
                                               fontSize: 20.0,
                                               color: Colors.white,
@@ -341,15 +381,14 @@ class _MyHomeAppState extends State<MyHomeApp> {
                                             ),
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () => {
-                                                setState(() {
-                                                  currentView = 'All';
-                                                  currentAssignments =
-                                                      assignments;
-                                                })
-                                              }),
+                                                    setState(() {
+                                                      currentView = 'All';
+                                                      currentAssignments =
+                                                          assignments;
+                                                    })
+                                                  }),
                                       );
                                     }),
-
                               ],
                             )),
                       ],
@@ -551,8 +590,9 @@ class _MyHomeAppState extends State<MyHomeApp> {
                 builder: (context) => const CreateAssignmentPage()),
           );
 
-          setState(() {reload = true;});
-
+          setState(() {
+            reload = true;
+          });
         },
         label: const Text('Add'),
         icon: const Icon(Icons.add),
