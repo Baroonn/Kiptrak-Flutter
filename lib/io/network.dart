@@ -10,7 +10,7 @@ import 'package:kiptrak/io/database.dart';
 import '../models/User.dart';
 
 class KiptrakNetwork {
-  static const baseUrl = 'https://kiptrak.herokuapp.com';
+  static const baseUrl = 'https://kiptrak.azurewebsites.net';
   static Future<Response> postUser({required User user}) async {
     return http.post(Uri.parse('$baseUrl/api/v1/auth/register'),
         headers: <String, String>{
@@ -38,7 +38,7 @@ class KiptrakNetwork {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'username': user!.userName,
+          'username': user!.username,
           'password': user.password,
         }));
 
@@ -97,7 +97,7 @@ class KiptrakNetwork {
     }
   }
 
-  static Future<Response?> followUser({required int id, required String action}) async {
+  static Future<Response?> followUser({required String id, required String action}) async {
     if(action != 'follow' && action != 'unfollow'){
       print(action);
       return null;

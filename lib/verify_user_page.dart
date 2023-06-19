@@ -71,14 +71,14 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
                             logDev.log("Verifying User...");
                             var response = await KiptrakNetwork.verifyUser(
                                 code: _code!,
-                                username: widget.user.userName);
+                                username: widget.user.username);
                             logDev.log("After Verifying User Request...");
                             Response loginResponse;
                             if (response.statusCode == 200) {
-                              logDev.log("Username: ${widget.user.userName}");
+                              logDev.log("Username: ${widget.user.username}");
                               logDev.log("Password: ${widget.user.password}");
                               loginResponse = await KiptrakNetwork.login(
-                                  username: widget.user.userName,
+                                  username: widget.user.username,
                                   password: widget.user.password);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

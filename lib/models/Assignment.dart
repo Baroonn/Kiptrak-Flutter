@@ -7,7 +7,7 @@ class Assignment {
   String lecturer;
   int dateDue;
   String? notes;
-  String createdBy;
+  String userId;
   DateTime createdAt;
   String? imagePath;
   AssignmentStatus status;
@@ -19,7 +19,7 @@ class Assignment {
       required this.lecturer,
       required this.dateDue,
       this.notes,
-      required this.createdBy,
+      required this.userId,
       required this.createdAt,
       this.imagePath,
       required this.status});
@@ -32,7 +32,7 @@ class Assignment {
       'lecturer': lecturer,
       'dateDue': DateTime.fromMillisecondsSinceEpoch(dateDue).toString(),
       'notes': notes,
-      'createdBy': createdBy,
+      'createdBy': userId,
       'createdAt': createdAt,
       'imagePath': imagePath,
       'status': status.name,
@@ -104,7 +104,7 @@ class AssignmentOnlineCreateDto {
 }
 
 class AssignmentReadDto {
-  int id;
+  String id;
   String title;
   String desc;
   String course;
@@ -146,7 +146,7 @@ class AssignmentReadDto {
       desc: json['description'],
       course: json['course'],
       lecturer: json['lecturer'],
-      dateDue: DateTime.parse(json['datedue']),
+      dateDue: DateTime.parse(json['dateDue']),
       status: AssignmentStatus.pending,
       notes: json['notes'],
       imagePath: json['images'],
@@ -155,7 +155,7 @@ class AssignmentReadDto {
 }
 
 class AssignmentOnlineReadDto {
-  int id;
+  String id;
   String title;
   String description;
   String course;
@@ -163,9 +163,8 @@ class AssignmentOnlineReadDto {
   int dateDue;
   String? notes;
   String? images;
-  DateTime createdate;
-  int createdby;
-  String username;
+  DateTime created;
+  String userId;
   AssignmentStatus status;
 
   AssignmentOnlineReadDto(
@@ -177,9 +176,8 @@ class AssignmentOnlineReadDto {
       required this.dateDue,
       this.notes,
       this.images,
-      required this.createdate,
-      required this.createdby,
-      required this.username})
+      required this.created,
+      required this.userId})
       : status = AssignmentStatus.pending;
 
   Map<String, dynamic> toMap() {
@@ -189,13 +187,12 @@ class AssignmentOnlineReadDto {
       'description': description,
       'course': course,
       'lecturer': lecturer,
-      'datedue': dateDue,
+      'dateDue': dateDue,
       'notes': notes,
       'status': status.name,
       'images': images,
-      'createdate': createdate.toString(),
-      'createdby': createdby,
-      'username': username
+      'created': created.toString(),
+      'userId': userId
     };
   }
 
@@ -206,17 +203,16 @@ class AssignmentOnlineReadDto {
         description: json['description'],
         course: json['course'],
         lecturer: json['lecturer'],
-        dateDue: DateTime.parse(json['datedue']).millisecondsSinceEpoch,
+        dateDue: DateTime.parse(json['dateDue']).millisecondsSinceEpoch,
         notes: json['notes'],
         images: json['images'],
-        createdate: DateTime.parse(json['createdate']),
-        createdby: json['createdby'],
-        username: json['username']);
+        created: DateTime.parse(json['created']),
+        userId: json['userId']);
   }
 }
 
 class AssignmentGlobalReadDto {
-  int id;
+  String id;
   String title;
   String description;
   String course;
@@ -224,9 +220,8 @@ class AssignmentGlobalReadDto {
   DateTime dateDue;
   String? notes;
   String? images;
-  DateTime createdate;
-  int createdby;
-  String username;
+  DateTime created;
+  String userId;
   AssignmentStatus status;
 
   AssignmentGlobalReadDto(
@@ -239,9 +234,8 @@ class AssignmentGlobalReadDto {
         this.notes,
         this.images,
         required this.status,
-        required this.createdate,
-        required this.createdby,
-        required this.username});
+        required this.created,
+        required this.userId});
 
   Map<String, dynamic> toMap() {
     return {
@@ -254,9 +248,8 @@ class AssignmentGlobalReadDto {
       'notes': notes,
       'status': status.name,
       'images': images,
-      'createdate': createdate.toString(),
-      'createdby': createdby,
-      'username': username
+      'created': created.toString(),
+      'userId': userId
     };
   }
 
@@ -267,12 +260,11 @@ class AssignmentGlobalReadDto {
         description: json['description'],
         course: json['course'],
         lecturer: json['lecturer'],
-        dateDue: DateTime.fromMillisecondsSinceEpoch(json['datedue']),
+        dateDue: DateTime.fromMillisecondsSinceEpoch(json['dateDue']),
         notes: json['notes'],
         status: json['status'] == 'completed'?AssignmentStatus.completed: AssignmentStatus.pending,
         images: json['images'],
-        createdate: DateTime.parse(json['createdate']),
-        createdby: json['createdby'],
-        username: json['username']);
+        created: DateTime.parse(json['created']),
+        userId: json['userId']);
   }
 }

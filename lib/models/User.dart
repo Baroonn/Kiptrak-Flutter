@@ -1,24 +1,24 @@
 class User {
-  String userName;
+  String username;
   String password;
   String email;
-  String? phoneNumber;
+  String? phonenumber;
   String? token;
 
   User({
-    required this.userName,
+    required this.username,
     required this.password,
     required this.email,
-    this.phoneNumber,
+    this.phonenumber,
     this.token
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'username': userName,
+      'username': username,
       'password': password,
       'email': email,
-      'phoneNumber': phoneNumber,
+      'phonenumber': phonenumber,
       'token':token
     };
   }

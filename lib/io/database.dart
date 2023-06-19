@@ -20,23 +20,22 @@ class KiptrakDatabase{
       version: 1,
       onCreate: (db, version) {
         db.execute(
-          '''CREATE TABLE global_assignments(id INTEGER UNIQUE,
+          '''CREATE TABLE global_assignments(id TEXT,
           title TEXT,
           description TEXT,
           course TEXT,
           lecturer TEXT,
-          datedue INTEGER,
+          dateDue INTEGER,
           notes TEXT,
           images TEXT,
-          createdby INTEGER,
-          createdate TEXT,
-          username TEXT,
+          userId INTEGER,
+          created TEXT,
           status TEXT)
            ''',
         );
 
         db.execute(
-          '''CREATE TABLE local_assignments(id INTEGER PRIMARY KEY,
+          '''CREATE TABLE local_assignments(id TEXT,
           title TEXT,
           desc TEXT,
           course TEXT,
@@ -49,7 +48,7 @@ class KiptrakDatabase{
         );
 
         db.execute(
-          '''CREATE TABLE user_details(id INTEGER PRIMARY KEY,
+          '''CREATE TABLE user_details(id TEXT,
           userName TEXT,
           password TEXT,
           email TEXT,
@@ -70,16 +69,16 @@ class KiptrakDatabase{
     final List<Map<String, dynamic>> maps = await db.query('user_details');
     if(maps.isEmpty){
       return User(
-        userName: "",
+        username: "",
         password: "",
         email:""
       );
     }
     return User(
-      userName: maps[0]['userName'],
+      username: maps[0]['userName'],
       password: maps[0]['password'],
       email: maps[0]['email'],
-      phoneNumber: maps[0]['phoneNumber'],
+      phonenumber: maps[0]['phoneNumber'],
       token: maps[0]['token']
     );
   }
@@ -105,10 +104,10 @@ class KiptrakDatabase{
     await db.insert(
       'user_details',
       {
-        'userName':user.userName,
+        'userName':user.username,
         'password':user.password,
         'email':user.email,
-        'phoneNumber': user.phoneNumber,
+        'phoneNumber': user.phonenumber,
         'token': user.token
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
@@ -119,9 +118,8 @@ class KiptrakDatabase{
 
   static Future<void> insertGlobalAssignment(AssignmentOnlineReadDto assignment) async {
     final db = await createDatabase();
-
+    logDev.log("In global assignment");
     var maps = await db.query('global_assignments', where: 'id = ?', whereArgs: [assignment.id]);
-    print("In global assignment");
     print(maps.length);
     if (maps.isNotEmpty){
       return;
@@ -153,7 +151,7 @@ class KiptrakDatabase{
     );
   }
 
-  static Future<void> updateGlobalAssignmentStatus(int id, String status) async {
+  static Future<void> updateGlobalAssignmentStatus(String id, String status) async {
     final db = await database;
 
     print(id);print(status);
@@ -177,7 +175,7 @@ class KiptrakDatabase{
         lecturer: maps[i]['lecturer'],
         dateDue: maps[i]['dateDue'],
         notes: maps[i]['notes'],
-        createdBy: maps[i]['createdBy'],
+        userId: maps[i]['createdBy'],
         createdAt: maps[i]['createdAt'],
         status: maps[i]['status'],
       );
@@ -221,17 +219,17 @@ class KiptrakDatabase{
 
     final List<Map<String, dynamic>> maps = await db.query(
         'global_assignments',
-        where: 'datedue > ? AND status IN (\'pending\', \'completed\')',
+        where: 'dateDue > ? AND status IN (\'pending\', \'completed\')',
         whereArgs: [DateTime.now().add(Duration(days: -2)).millisecondsSinceEpoch]
     );
-    logDev.log(maps.length.toString());
+    logDev.log("Getting " + maps.length.toString());
     //logDev.log(maps[0]['dateDue']);
     return List.generate(maps.length, (i){
       return AssignmentGlobalReadDto.fromJson(maps[i]);
     });
   }
 
-  static Future<void> deleteLocalAssignments(int id) async{
+  static Future<void> deleteLocalAssignments(String id) async{
     final db = await database;
     db.rawDelete(
       'DELETE FROM local_assignments WHERE id = ?',

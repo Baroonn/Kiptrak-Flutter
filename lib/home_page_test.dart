@@ -144,6 +144,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
   }
 
   Future<List<AssignmentGlobalReadDto>?> loadAssignments() async {
+    print("loading Assignments");
     if (!reload) {
       return await KiptrakDatabase.getGlobalAssignments();
     }
@@ -151,9 +152,11 @@ class _MyHomeAppState extends State<MyHomeApp> {
     //   reload = false;
     //   return await KiptrakDatabase.getGlobalAssignments();
     // }
+    print("loading from net");
     Response response;
     try {
       response = await KiptrakNetwork.getOnlineAssignments();
+      print(response.statusCode);
     } on Exception catch (e) {
       reload = false;
       return await KiptrakDatabase.getGlobalAssignments();
@@ -166,6 +169,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
       for (var item in processed) {
         await KiptrakDatabase.insertGlobalAssignment(item);
       }
+      print("got here");
       reload = false;
       return await KiptrakDatabase.getGlobalAssignments();
     } else {
@@ -203,7 +207,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Hello, ${widget.user.userName[0].toUpperCase()}${widget.user.userName.substring(1).toLowerCase()}',
+                        'Hello, ${widget.user.username[0].toUpperCase()}${widget.user.username.substring(1).toLowerCase()}',
                         textAlign: TextAlign.left,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,

@@ -32,7 +32,7 @@ class KipTrak  extends StatelessWidget {
           builder: (context, snapshot) {
             if(snapshot.hasData){
               User? user = snapshot.data as User;
-              return user.userName != ""? MyHomeApp(user: user,):WelcomePage();
+              return user.username != ""? MyHomeApp(user: user,):WelcomePage();
             }
 
             return CircularProgressIndicator();

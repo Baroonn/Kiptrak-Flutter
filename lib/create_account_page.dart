@@ -180,7 +180,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                   const SnackBar(content: Text('Processing Data')),
                                 );
 
-                                User user = User(userName: _userCtl.text, password: _passCtl.text, email: _emailCtl.text, phoneNumber: _phoneCtl.text);
+                                User user = User(username: _userCtl.text, password: _passCtl.text, email: _emailCtl.text, phonenumber: _phoneCtl.text);
 
                                 var response = await KiptrakNetwork.postUser(user: user);
                                 if(response.statusCode == 201){

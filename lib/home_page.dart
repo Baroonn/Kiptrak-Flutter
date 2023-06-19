@@ -148,7 +148,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Hello, ${widget.user.userName}',
+                            'Hello, ${widget.user.username}',
                             textAlign: TextAlign.left,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,

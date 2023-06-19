@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                                   var body = jsonDecode(response.body);
                                   var token = body['token'];
                                   if(token!=null){
-                                    var user = User(userName: _userCtl.text, password: _passCtl.text, email: widget.email, token: token);
+                                    var user = User(username: _userCtl.text, password: _passCtl.text, email: widget.email, token: token);
                                     await KiptrakDatabase.insertUserDetails(user: user);
                                     Navigator.pushReplacement(
                                         context,
@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                                   }
                                 }
                                 else if(response.statusCode == 403){
-                                  var user = User(userName: _userCtl.text, password: _passCtl.text, email: widget.email);
+                                  var user = User(username: _userCtl.text, password: _passCtl.text, email: widget.email);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

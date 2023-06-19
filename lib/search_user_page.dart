@@ -106,12 +106,19 @@ class _SearchUserPageState extends State<SearchUserPage> {
                             Text('Joined: ${users[index]['created']}'),
                             TextButton(
                                 onPressed: ()async {
-                                  var response = await KiptrakNetwork.followUser(id: users[index]['id'], action:following.contains(users[index]['id'].toString())?'unfollow':'follow');
+                                  var response = await KiptrakNetwork.followUser(id: users[index]['username'], action:following.contains(users[index]['username'].toString())?'unfollow':'follow');
+                                  print(response?.statusCode);
                                   if(response?.statusCode == 200){
-                                    following.contains(users[index]['id'].toString())?following.remove(users[index]['id'].toString()) : following.add(users[index]['id'].toString());
+                                    following.contains(users[index]['username'].toString())?following.remove(users[index]['username'].toString()) : following.add(users[index]['username'].toString());
                                     setState(() {
 
                                     });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(jsonDecode(response!.body)['message']),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
                                   }
                                   else if(response!= null){
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -122,7 +129,7 @@ class _SearchUserPageState extends State<SearchUserPage> {
                                     );
                                   }
                                 },
-                                child: Text(following.contains(users[index]['id'].toString())?'Unfollow':'Follow')
+                                child: Text(following.contains(users[index]['username'].toString())?'Unfollow':'Follow')
                             )
                           ],
                         ),

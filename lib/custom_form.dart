@@ -280,7 +280,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                       if (imageUploadResponse.statusCode == 200){
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text("Uploading Images Successfully"),
+                            content: Text("Uploaded Images Successfully"),
                             backgroundColor: Colors.green,
                           ),
                         );
