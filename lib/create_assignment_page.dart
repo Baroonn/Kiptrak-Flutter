@@ -1,9 +1,4 @@
-import 'dart:ffi';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'models/Assignment.dart';
 import 'custom_form.dart';
 
 class CreateAssignmentPage extends StatefulWidget {
@@ -18,8 +13,8 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pinkAccent,
-        title: Text(
+        backgroundColor: const Color(0xFF152d32),
+        title: const Text(
           'Create Assignment',
         ),
       ),

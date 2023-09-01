@@ -231,7 +231,7 @@ class MyCustomFormState extends State<MyCustomForm> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               minimumSize: Size(double.infinity, 40),
-              backgroundColor: Colors.pinkAccent,
+              backgroundColor: const Color(0xFF152d32),
             ),
             onPressed: () async {
                 // Validate returns true if the form is valid, or false otherwise.

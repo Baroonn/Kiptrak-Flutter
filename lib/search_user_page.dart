@@ -37,7 +37,7 @@ class _SearchUserPageState extends State<SearchUserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.pinkAccent,
+          backgroundColor: const Color(0xFF152d32),
           title: const Text('Search for User'),
         ),
         body: Column(

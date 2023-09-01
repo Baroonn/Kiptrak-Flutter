@@ -1,10 +1,6 @@
-import 'dart:ffi';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'models/Assignment.dart';
-import 'custom_form.dart';
 
 class AssignmentDetailsPage extends StatefulWidget {
   AssignmentGlobalReadDto ard;
@@ -33,9 +29,9 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.pinkAccent,
+          backgroundColor: const Color(0xFF152d32),
           title: Text(
-            'Details',
+            titleCtl.text,
           ),
         ),
         body: SingleChildScrollView(
@@ -43,27 +39,76 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
               padding: EdgeInsets.all(15.0),
               child: Column(
                 children: [
-                  TextField(
-                    controller: titleCtl,
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.only(
+                          left: 10.0, right: 10.0, top: 10.0),
+                      //margin: const EdgeInsets.only(bottom: 10.0),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF656565),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                      ),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.ard.description,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                )),
+                            Text(
+                                "\nCourse: ${widget.ard.course}\nLecturer: ${widget.ard.lecturer}\nDate Due: ${widget.ard.dateDue.toString().split(' ')[0]}\n",
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontStyle: FontStyle.italic,
+                                ))
+                          ])),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  Text(
-                    widget.ard.description,
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.only(
+                          left: 10.0, right: 10.0, top: 10.0),
+                      //margin: const EdgeInsets.only(bottom: 10.0),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                      ),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "Notes:\n${widget.ard.notes == null || widget.ard.notes == "" ? "*" : widget.ard.notes}",
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold
+                                )
+                            ),
+
+                          ])),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  Text(widget.ard.course),
-                  Text(widget.ard.lecturer),
-                  Text(widget.ard.dateDue.toString().split(' ')[0]),
-                  Text(widget.ard.notes ?? ""),
                   if (widget.ard.images != null && widget.ard.images != "")
                     for (var image in imagesArray!)
                       Column(
                         children: [
-                          Image.network(
-                            image,
-                            width: MediaQuery.of(context).size.width * 0.8,
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url = Uri.parse(image);
+                              if (!await launchUrl(url)) {
+                                throw Exception('Could not get image');
+                              }
+                            },
+                            child: Image.network(image),
                           ),
                           const SizedBox(
                             height: 20,
-                          )
+                          ),
                         ],
                       )
                 ],
