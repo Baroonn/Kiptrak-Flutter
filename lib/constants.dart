@@ -1,1 +1,0 @@
-const apiSecretKey = "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";
