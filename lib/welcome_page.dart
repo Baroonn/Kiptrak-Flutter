@@ -24,9 +24,11 @@ class _WelcomePageState extends State<WelcomePage> {
                     Container(
                         height: MediaQuery.of(context).size.height * 0.7,
                         alignment: Alignment.center,
-                        child: Text('Welcome \nto \nKiptrak',
+                        child: const Text('Welcome \nto \nKiptrak',
                             style: TextStyle(
-                                color: Colors.white, fontSize: 30.0))),
+                                color: Colors.white,
+                                fontSize: 35.0,
+                                fontWeight: FontWeight.bold))),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.3,
                       child: Column(
@@ -41,9 +43,8 @@ class _WelcomePageState extends State<WelcomePage> {
                           ),
                           SizedBox(height: 15.0),
                           Form(
-                            key: _formKey,
-                            child: Column(
-                              children:[
+                              key: _formKey,
+                              child: Column(children: [
                                 TextFormField(
                                   controller: _emailCtl,
                                   validator: (value) {
@@ -78,16 +79,14 @@ class _WelcomePageState extends State<WelcomePage> {
                                         Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => CreateAccountPage(
-                                                  email: _emailCtl.text)),
+                                              builder: (context) =>
+                                                  CreateAccountPage(
+                                                      email: _emailCtl.text)),
                                         );
                                       }
                                     },
                                     child: Text('Continue'))
-                              ]
-                            )
-                          ),
-
+                              ])),
                         ],
                       ),
                     )

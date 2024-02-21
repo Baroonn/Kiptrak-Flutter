@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:developer' as logDev;
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart';
-import 'package:kiptrak/io/database.dart';
 import 'package:kiptrak/io/network.dart';
 
 import 'models/Assignment.dart';

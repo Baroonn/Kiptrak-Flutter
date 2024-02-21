@@ -4,8 +4,8 @@ import 'dart:developer' as logDev;
 import 'package:flutter/material.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:http/http.dart';
-import 'package:kiptrak/io/database.dart';
 import 'package:kiptrak/home_page_test.dart';
+import 'package:kiptrak/io/database.dart';
 import 'package:kiptrak/io/network.dart';
 
 import 'models/User.dart';

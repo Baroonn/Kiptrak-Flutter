@@ -1,4 +1,4 @@
-package com.example.kiptrak
+package com.scottlux.kiptrak
 
 import io.flutter.embedding.android.FlutterActivity
 

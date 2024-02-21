@@ -1,12 +1,7 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:http/http.dart' as http;
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'models/Assignment.dart';
 import 'constants.dart';
-import 'custom_form.dart';
 
 class SearchAnswerPage extends StatefulWidget {
 
